@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git &amp; GitHub — Complete Command Guide (Windows + Linux)</title>
+<style>
+:root{
+  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:"Cascadia Code","Consolas","SF Mono",Menlo,"Liberation Mono",monospace;
+  --color-text-primary:#1c1b19;
+  --color-text-secondary:#57534e;
+  --color-text-tertiary:#8b8782;
+  --color-background-primary:#ffffff;
+  --color-background-secondary:#f6f5f3;
+  --color-border-primary:#b8b4ae;
+  --color-border-secondary:#d6d3ce;
+  --color-border-tertiary:#e9e6e2;
+  --color-background-success:#e3f6ef;
+  --color-background-warning:#fdf3e0;
+  --color-background-danger:#fcebeb;
+  --page-bg:#fbfaf8;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --color-text-primary:#ededed;
+    --color-text-secondary:#b3b0ab;
+    --color-text-tertiary:#827d76;
+    --color-background-primary:#1c1b19;
+    --color-background-secondary:#252420;
+    --color-border-primary:#56524c;
+    --color-border-secondary:#423f39;
+    --color-border-tertiary:#34322e;
+    --color-background-success:#0c2c25;
+    --color-background-warning:#2e2410;
+    --color-background-danger:#2e1414;
+    --page-bg:#151412;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--page-bg)}
+body,div,span,p,h1,h2,h3,button{font-family:var(--font-sans);color:var(--color-text-primary)}
+body{line-height:1.5;padding:22px 16px 64px}
+.app{max-width:760px;margin:0 auto}
+.pagehead{margin-bottom:18px}
+.pagehead h1{font-size:24px;font-weight:650;letter-spacing:-.4px}
+.pagehead .sub{font-size:13px;color:var(--color-text-secondary);margin-top:4px;line-height:1.6}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.legend span{font-size:11px;color:var(--color-text-tertiary);display:inline-flex;align-items:center;gap:4px}
+.phase-nav{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.pn{font-size:11px;padding:4px 11px;border-radius:16px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:pointer;white-space:nowrap;transition:all .15s}
+.pn:hover{background:var(--color-background-primary);color:var(--color-text-primary)}
+.pn.done{border-color:#0f6e56;color:#0f6e56;background:#e1f5ee}
+.pn.active{background:#0f6e56;color:#fff;border-color:#0f6e56}
+@media(prefers-color-scheme:dark){.pn.done{background:#04342c;color:#5dcaa5;border-color:#0f6e56}.pn.active{background:#085041;color:#9fe1cb;border-color:#1d9e75}}
+.pbar{height:4px;background:var(--color-border-tertiary);border-radius:2px;margin-bottom:6px;overflow:hidden}
+.pfill{height:100%;background:#1d9e75;transition:width .4s}
+.pmeta{display:flex;justify-content:space-between;font-size:11px;color:var(--color-text-tertiary);margin-bottom:18px}
+.pmeta .reset{cursor:pointer;text-decoration:underline}
+.sec{display:none}.sec.active{display:block}
+.phase-title{font-size:19px;font-weight:600;margin-bottom:4px}
+.phase-desc{font-size:13px;color:var(--color-text-secondary);line-height:1.65;margin-bottom:18px}
+.step{border:0.5px solid var(--color-border-tertiary);border-radius:12px;background:var(--color-background-primary);margin-bottom:10px;overflow:hidden}
+.step-hdr{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;user-select:none}
+.step-hdr:hover{background:var(--color-background-secondary)}
+.sn{width:22px;height:22px;border-radius:50%;background:#1d9e75;color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.st{font-size:14px;font-weight:550;flex:1;line-height:1.3}
+.sbadge{font-size:10px;padding:2px 7px;border-radius:8px;flex-shrink:0;display:inline-flex;align-items:center;gap:3px}
+.sec-badge{background:#fcebeb;color:#791f1f;border:0.5px solid #f09595}
+.adv-badge{background:#eeedfe;color:#3c3489;border:0.5px solid #afa9ec}
+@media(prefers-color-scheme:dark){.sec-badge{background:#501313;color:#f7c1c1;border-color:#a32d2d}.adv-badge{background:#26215c;color:#cecbf6;border-color:#534ab7}}
+.chev{font-size:12px;color:var(--color-text-tertiary);transition:transform .2s}
+.step.open .chev{transform:rotate(180deg)}
+.step-body{display:none;padding:0 14px 14px}
+.step.open .step-body{display:block}
+.step-desc{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:12px;padding-top:4px}
+.dual{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-bottom:8px}
+@media(max-width:640px){.dual{grid-template-columns:1fr}}
+.os-block{border-radius:8px;overflow:hidden;border:0.5px solid var(--color-border-tertiary)}
+.os-hdr{display:flex;align-items:center;gap:6px;padding:6px 10px;font-size:11px;font-weight:550}
+.win-hdr{background:#e6f1fb;color:#0c447c;border-bottom:0.5px solid #b5d4f4}
+.lin-hdr{background:#eaf3de;color:#27500a;border-bottom:0.5px solid #c0dd97}
+@media(prefers-color-scheme:dark){.win-hdr{background:#042c53;color:#b5d4f4;border-color:#0c447c}.lin-hdr{background:#173404;color:#c0dd97;border-color:#27500a}}
+.os-cmds{padding:8px 10px;background:var(--color-background-secondary)}
+.cmd-row{display:flex;align-items:flex-start;gap:5px;margin-bottom:4px}
+.prompt{font-size:11px;font-family:var(--font-mono);flex-shrink:0;padding-top:1px}
+.wp{color:#185fa5}.lp{color:#3b6d11}
+@media(prefers-color-scheme:dark){.wp{color:#85b7eb}.lp{color:#97c459}}
+.cmd{font-size:12px;font-family:var(--font-mono);color:var(--color-text-primary);line-height:1.5;word-break:break-word;white-space:pre-wrap;flex:1}
+.cmd-note{font-size:11px;color:var(--color-text-secondary);line-height:1.55;padding:3px 0 5px 16px;border-left:2px solid var(--color-border-tertiary);margin-bottom:4px;white-space:pre-wrap}
+.section-lbl{font-size:11px;color:var(--color-text-tertiary);font-family:var(--font-mono);padding:6px 0 3px}
+.cpbtn{margin-left:auto;font-size:10px;padding:2px 8px;border-radius:5px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);cursor:pointer;color:var(--color-text-secondary)}
+.cpbtn:hover{color:var(--color-text-primary)}
+.tip{border-left:3px solid #1d9e75;background:var(--color-background-success);padding:7px 10px;font-size:12px;color:var(--color-text-secondary);line-height:1.65;margin-top:8px;border-radius:0 6px 6px 0}
+.warn{border-left:3px solid #ba7517;background:var(--color-background-warning);padding:7px 10px;font-size:12px;color:var(--color-text-secondary);line-height:1.65;margin-top:8px;border-radius:0 6px 6px 0}
+.danger{border-left:3px solid #a32d2d;background:var(--color-background-danger);padding:7px 10px;font-size:12px;color:var(--color-text-secondary);line-height:1.65;margin-top:8px;border-radius:0 6px 6px 0}
+.tip strong,.warn strong,.danger strong{color:var(--color-text-primary)}
+.complete-wrap{margin-top:16px}
+.ccb{font-size:13px;padding:9px 16px;border-radius:9px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);cursor:pointer;color:var(--color-text-primary);transition:all .15s;width:100%}
+.ccb:hover{border-color:var(--color-border-primary)}
+.ccb.on{background:#0f6e56;color:#fff;border-color:#0f6e56}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:12px;border-top:0.5px solid var(--color-border-tertiary)}
+.fb{font-size:13px;padding:7px 15px;border-radius:8px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);cursor:pointer;color:var(--color-text-primary);transition:all .15s}
+.fb:hover{background:var(--color-background-primary);border-color:var(--color-border-primary)}
+.fb:disabled{opacity:.3;cursor:default}
+.fcnt{font-size:12px;color:var(--color-text-secondary)}
+code{font-family:var(--font-mono);font-size:.92em;background:var(--color-background-secondary);padding:1px 4px;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="pagehead">
+    <h1>Git &amp; GitHub — Command Guide</h1>
+    <div class="sub">From zero to advanced, with every command shown side-by-side for <strong>Windows</strong> and <strong>Linux</strong>. Your progress is saved in this browser. 🛡 = security step · ✨ = advanced.</div>
+  </div>
+  <div class="phase-nav" id="nav"></div>
+  <div class="pbar"><div class="pfill" id="pfill"></div></div>
+  <div class="pmeta"><span id="pcount"></span><span class="reset" onclick="resetProgress()">reset progress</span></div>
+  <div id="content"></div>
+  <div class="foot">
+    <button class="fb" id="bp" onclick="go(-1)" disabled>← Previous</button>
+    <span class="fcnt" id="fc"></span>
+    <button class="fb" id="bn" onclick="go(1)">Next →</button>
+  </div>
+</div>
+
+<script>
+const D=[
+{
+  id:"p0",label:"Start here",title:"Git & GitHub — from zero",
+  desc:"Two different things people constantly mix up. Git is a tool that runs on your computer and takes snapshots of your code over time. GitHub is a website that stores those snapshots online. You install Git once, then use it for every project — GitHub is optional but it's where your public profile and portfolio live.",
+  steps:[
+    {
+      t:"0.1 — Git vs GitHub (don't confuse them)",
+      desc:"Git = the version-control program running locally on your laptop. It works fully offline and tracks every change to your files. GitHub = a cloud service that hosts your Git repositories online so you can back them up, show recruiters, and collaborate. Git is the engine; GitHub is the garage you park it in. Other hosts (GitLab, Bitbucket) speak the exact same commands — learn Git once, use it anywhere.",
+      pairs:[],
+      tip:"You can use Git with no GitHub at all. But for a cybersecurity career, your GitHub is your shop window — so we connect the two early (Phase 3 onward)."
+    },
+    {
+      t:"0.2 — The 4 places your code lives",
+      desc:"Almost every Git command just moves your code between four stages. (1) Working Directory — the actual files you edit. (2) Staging Area — files you marked ready to save, using git add. (3) Local Repository — permanent snapshots on your machine, made with git commit. (4) Remote / GitHub — the online copy, updated with git push. Once this clicks, every command in this guide makes sense.",
+      pairs:[]
+    },
+    {
+      t:"0.3 — Why this matters for your career",
+      badge:"sec",
+      desc:"Recruiters check GitHub before interviews. You'll publish your scripts, CTF writeups, and eventually CVE research there. Knowing Git cold also means you never lose work and can experiment safely on branches. Phase 7 covers the security side specifically — keeping API keys and secrets out of repos, and signing commits to prove they're really from you.",
+      pairs:[]
+    }
+  ]
+},
+{
+  id:"p1",label:"Phase 1",title:"Phase 1 — Install Git & first setup",
+  desc:"Install Git on your machine, verify it works, and configure your identity. Every commit you ever make will carry your name and email — set these correctly from the start.",
+  steps:[
+    {
+      t:"1.1 — Download and install Git",
+      desc:"Windows installs from git-scm.com, which includes Git Bash and Git CMD. Linux uses the system package manager. Both result in the same 'git' command being available.",
+      pairs:[
+        {
+          lbl:"Install Git",
+          w:[
+            {p:"",c:"1. Go to: https://git-scm.com/download/win",note:"Download starts automatically for the latest version (2.54.0 as of 2026)."},
+            {p:"",c:"2. Run the .exe installer as Administrator",note:"Accept all defaults. Select 'Git from the command line and 3rd-party software' when prompted about PATH."},
+            {p:"",c:"3. Select your terminal: choose 'Use Windows' default console window' for CMD/PowerShell use."}
+          ],
+          l:[
+            {p:"$",c:"sudo apt update && sudo apt install git -y",note:"Ubuntu / Debian / Linux Mint"},
+            {p:"$",c:"sudo dnf install git -y",note:"Fedora / RHEL / CentOS"},
+            {p:"$",c:"sudo pacman -S git",note:"Arch / Manjaro"}
+          ]
+        },
+        {
+          lbl:"Verify installation",
+          w:[{p:"C:\\>",c:"git --version",note:"Expected output: git version 2.x.x.windows.x"}],
+          l:[{p:"$",c:"git --version",note:"Expected output: git version 2.x.x"}]
+        }
+      ]
+    },
+    {
+      t:"1.2 — Set your identity (required before first commit)",
+      desc:"Git embeds your name and email in every commit permanently. Use the same email as your GitHub account so commits link to your profile. The --global flag applies this to ALL repos on your machine.",
+      pairs:[
+        {
+          lbl:"Set name and email",
+          w:[
+            {p:"C:\\>",c:'git config --global user.name "Your Full Name"'},
+            {p:"C:\\>",c:'git config --global user.email "you@example.com"',note:"Use the email linked to your GitHub account."}
+          ],
+          l:[
+            {p:"$",c:'git config --global user.name "Your Full Name"'},
+            {p:"$",c:'git config --global user.email "you@example.com"',note:"Same email as your GitHub account."}
+          ]
+        },
+        {
+          lbl:"Set default branch name to main",
+          w:[{p:"C:\\>",c:"git config --global init.defaultBranch main",note:"Ensures every new repo uses 'main' instead of the old 'master'."}],
+          l:[{p:"$",c:"git config --global init.defaultBranch main",note:"Ensures every new repo uses 'main' instead of the old 'master'."}]
+        },
+        {
+          lbl:"Set preferred text editor",
+          w:[
+            {p:"C:\\>",c:"git config --global core.editor notepad",note:"For Notepad. For VS Code use: git config --global core.editor \"code --wait\""}
+          ],
+          l:[
+            {p:"$",c:"git config --global core.editor nano",note:"nano is beginner-friendly. For vim: replace nano with vim."}
+          ]
+        },
+        {
+          lbl:"Verify all config",
+          w:[{p:"C:\\>",c:"git config --global --list",note:"Lists all global settings. Check user.name and user.email are correct."}],
+          l:[{p:"$",c:"git config --global --list",note:"Same output as Windows. Look for user.name and user.email."}]
+        }
+      ],
+      tip:"Your email is baked into every commit forever. GitHub offers a private no-reply email: Settings → Emails → check 'Keep my email addresses private'. Use that email here."
+    }
+  ]
+},
+{
+  id:"p2",label:"Phase 2",title:"Phase 2 — Git's three-state system",
+  desc:"The most important concept in Git. Every file lives in one of three places: the Working Directory (your files), the Staging Area (what you're preparing to commit), and the Repository (permanent history). Once you understand this, every Git command makes sense.",
+  steps:[
+    {
+      t:"2.1 — Create your first repository",
+      desc:"git init creates the hidden .git folder inside your project directory. This is where Git stores all history and metadata. Never delete it manually.",
+      pairs:[
+        {
+          lbl:"Create a folder and initialize",
+          w:[
+            {p:"C:\\>",c:"mkdir my-project",note:"Creates a new folder called my-project."},
+            {p:"C:\\>",c:"cd my-project",note:"Move into the folder."},
+            {p:"C:\\my-project>",c:"git init",note:"Creates the hidden .git folder. Git now tracks this directory."}
+          ],
+          l:[
+            {p:"$",c:"mkdir my-project",note:"Creates a new folder called my-project."},
+            {p:"$",c:"cd my-project",note:"Move into the folder."},
+            {p:"$",c:"git init",note:"Creates the hidden .git folder. Git now tracks this directory."}
+          ]
+        }
+      ]
+    },
+    {
+      t:"2.2 — Working Directory: create and modify files",
+      desc:"Any file you create or edit lives in the Working Directory first. Git sees it but does not track it yet — it shows as 'Untracked'.",
+      pairs:[
+        {
+          lbl:"Create a file and check status",
+          w:[
+            {p:"C:\\my-project>",c:"echo # My Project > README.md",note:"Creates a README.md file in the Working Directory."},
+            {p:"C:\\my-project>",c:"git status",note:"Shows README.md as 'Untracked files' in red. Git sees it but isn't recording it."}
+          ],
+          l:[
+            {p:"$",c:"echo '# My Project' > README.md",note:"Creates a README.md file in the Working Directory."},
+            {p:"$",c:"git status",note:"Shows README.md as 'Untracked files' in red. Git sees it but isn't recording it."}
+          ]
+        }
+      ]
+    },
+    {
+      t:"2.3 — Staging Area: prepare your snapshot",
+      desc:"git add moves files from the Working Directory to the Staging Area. Think of it as packing a box — you choose exactly what goes into the next commit. You can stage one file, several files, or everything at once.",
+      pairs:[
+        {
+          lbl:"Stage a specific file",
+          w:[
+            {p:"C:\\my-project>",c:"git add README.md",note:"Stages only README.md."},
+            {p:"C:\\my-project>",c:"git status",note:"README.md now shows under 'Changes to be committed' in green."}
+          ],
+          l:[
+            {p:"$",c:"git add README.md",note:"Stages only README.md."},
+            {p:"$",c:"git status",note:"README.md now shows under 'Changes to be committed' in green."}
+          ]
+        },
+        {
+          lbl:"Stage all changed files at once",
+          w:[{p:"C:\\my-project>",c:"git add .",note:"The dot means 'everything in the current directory and subdirectories'."}],
+          l:[{p:"$",c:"git add .",note:"The dot means 'everything in the current directory and subdirectories'."}]
+        },
+        {
+          lbl:"Unstage a file (move it back to Working Directory)",
+          w:[{p:"C:\\my-project>",c:"git restore --staged README.md",note:"Removes from staging but keeps the file and your changes intact."}],
+          l:[{p:"$",c:"git restore --staged README.md",note:"Removes from staging but keeps the file and your changes intact."}]
+        }
+      ],
+      tip:"git add is selective by design. If you changed 10 files, you can stage only 3 of them and commit just those. This is what makes Git history meaningful."
+    },
+    {
+      t:"2.4 — Repository: commit and save permanently",
+      desc:"git commit seals the staged snapshot into permanent history inside the .git folder. Every commit gets a unique hash (like a fingerprint) and is immutable. Write commit messages in the present tense — they describe what the commit does, not what you did.",
+      pairs:[
+        {
+          lbl:"Commit staged changes",
+          w:[
+            {p:"C:\\my-project>",c:'git commit -m "Initial commit: add README"',note:"The -m flag lets you write the message inline. Without -m, your editor opens."}
+          ],
+          l:[
+            {p:"$",c:'git commit -m "Initial commit: add README"',note:"The -m flag lets you write the message inline. Without -m, your editor opens."}
+          ]
+        },
+        {
+          lbl:"View your commit history",
+          w:[
+            {p:"C:\\my-project>",c:"git log --oneline",note:"Shows each commit as one line: short hash + message."},
+            {p:"C:\\my-project>",c:"git log --oneline --graph --all",note:"Visual tree of all branches and commits. Press Q to exit."}
+          ],
+          l:[
+            {p:"$",c:"git log --oneline",note:"Shows each commit as one line: short hash + message."},
+            {p:"$",c:"git log --oneline --graph --all",note:"Visual tree of all branches and commits. Press Q to exit."}
+          ]
+        },
+        {
+          lbl:"See exactly what changed",
+          w:[
+            {p:"C:\\my-project>",c:"git diff",note:"Shows unstaged changes (Working Directory vs Staging Area)."},
+            {p:"C:\\my-project>",c:"git diff --staged",note:"Shows staged changes (what will go into the next commit)."}
+          ],
+          l:[
+            {p:"$",c:"git diff",note:"Shows unstaged changes (Working Directory vs Staging Area)."},
+            {p:"$",c:"git diff --staged",note:"Shows staged changes (what will go into the next commit)."}
+          ]
+        }
+      ]
+    }
+  ]
+},
+{
+  id:"p3",label:"Phase 3",title:"Phase 3 — SSH key setup",
+  desc:"SSH keys replace passwords permanently. You generate a key pair: the private key stays only on your machine, the public key goes to GitHub. GitHub uses them to verify your identity without ever asking for a password.",
+  steps:[
+    {
+      t:"3.1 — Generate an Ed25519 SSH key pair",
+      badge:"sec",
+      desc:"Ed25519 is the modern, recommended SSH algorithm — faster and more secure than RSA. Use the same email as your GitHub account. The passphrase adds a second layer of protection: even if someone steals the key file, they cannot use it without the phrase.",
+      pairs:[
+        {
+          lbl:"Generate the key",
+          w:[
+            {p:"C:\\>",c:'ssh-keygen -t ed25519 -C "you@example.com"',note:"Run in Git Bash (installed with Git for Windows) or PowerShell.\nWhen asked for file location: press Enter to accept default (C:\\Users\\YourName\\.ssh\\id_ed25519).\nWhen asked for passphrase: type a strong one."}
+          ],
+          l:[
+            {p:"$",c:'ssh-keygen -t ed25519 -C "you@example.com"',note:"When asked for file location: press Enter to accept default (~/.ssh/id_ed25519).\nWhen asked for passphrase: type a strong one."}
+          ]
+        },
+        {
+          lbl:"View your public key (this is what you upload to GitHub)",
+          w:[{p:"C:\\>",c:"type %USERPROFILE%\\.ssh\\id_ed25519.pub",note:"Prints the public key starting with ssh-ed25519 AAAA... Copy the entire line."}],
+          l:[{p:"$",c:"cat ~/.ssh/id_ed25519.pub",note:"Prints the public key starting with ssh-ed25519 AAAA... Copy the entire line."}]
+        }
+      ],
+      warn:"NEVER share id_ed25519 (no .pub). Only id_ed25519.pub is safe to share. The private key is yours alone — if exposed, delete the key pair and generate a new one immediately."
+    },
+    {
+      t:"3.2 — Add your public key to GitHub",
+      desc:"You paste the public key into GitHub's settings so GitHub can verify your identity when you connect via SSH.",
+      pairs:[
+        {
+          lbl:"Steps on GitHub (both OS — done in browser)",
+          w:[
+            {p:"",c:"1. github.com → click avatar → Settings",note:""},
+            {p:"",c:"2. Left sidebar → SSH and GPG keys",note:""},
+            {p:"",c:"3. Click 'New SSH key'",note:""},
+            {p:"",c:"4. Title: e.g. 'Windows Laptop' or 'Home PC'",note:""},
+            {p:"",c:"5. Key type: Authentication Key",note:""},
+            {p:"",c:"6. Paste your public key → click 'Add SSH key'",note:""}
+          ],
+          l:[
+            {p:"",c:"1. github.com → click avatar → Settings",note:""},
+            {p:"",c:"2. Left sidebar → SSH and GPG keys",note:""},
+            {p:"",c:"3. Click 'New SSH key'",note:""},
+            {p:"",c:"4. Title: e.g. 'Ubuntu Desktop' or 'Work Linux'",note:""},
+            {p:"",c:"5. Key type: Authentication Key",note:""},
+            {p:"",c:"6. Paste your public key → click 'Add SSH key'",note:""}
+          ]
+        }
+      ]
+    },
+    {
+      t:"3.3 — Start the SSH agent and test the connection",
+      desc:"The SSH agent holds your unlocked key in memory so you only type your passphrase once per session. Without it, you'd be asked for the passphrase on every single push and pull.",
+      pairs:[
+        {
+          lbl:"Start the agent and add your key",
+          w:[
+            {p:"PS>",c:"Start-Service ssh-agent",note:"PowerShell — enables the built-in Windows OpenSSH Agent."},
+            {p:"PS>",c:"ssh-add $env:USERPROFILE\\.ssh\\id_ed25519",note:"Adds your key. Enter passphrase once."}
+          ],
+          l:[
+            {p:"$",c:"eval $(ssh-agent -s)",note:"Starts the SSH agent process in the current session."},
+            {p:"$",c:"ssh-add ~/.ssh/id_ed25519",note:"Adds your key. Enter passphrase once."}
+          ]
+        },
+        {
+          lbl:"Test the connection to GitHub",
+          w:[{p:"C:\\>",c:"ssh -T git@github.com",note:"First time: type 'yes' when asked about fingerprint.\nSuccess: 'Hi username! You've successfully authenticated...'"}],
+          l:[{p:"$",c:"ssh -T git@github.com",note:"First time: type 'yes' when asked about fingerprint.\nSuccess: 'Hi username! You've successfully authenticated...'"}]
+        },
+        {
+          lbl:"Switch an existing repo from HTTPS to SSH",
+          w:[{p:"C:\\my-project>",c:"git remote set-url origin git@github.com:username/repo.git",note:"Replaces the HTTPS URL with SSH. All future pushes use your key."}],
+          l:[{p:"$",c:"git remote set-url origin git@github.com:username/repo.git",note:"Replaces the HTTPS URL with SSH. All future pushes use your key."}]
+        }
+      ],
+      tip:"On Windows, make ssh-agent start automatically: Open Services → OpenSSH Authentication Agent → Startup type: Automatic. Then you never need to run Start-Service again."
+    }
+  ]
+},
+{
+  id:"p4",label:"Phase 4",title:"Phase 4 — Multiple SSH keys",
+  desc:"When you have two GitHub accounts (personal and work are most common), you need separate SSH keys for each and a config file to tell SSH which key to use for which account.",
+  steps:[
+    {
+      t:"4.1 — Generate a second SSH key",
+      badge:"sec",
+      desc:"The -f flag sets a custom filename so the second key doesn't overwrite your first key. Use a name that clearly identifies which account it belongs to.",
+      pairs:[
+        {
+          lbl:"Generate second key with custom filename",
+          w:[{p:"C:\\>",c:'ssh-keygen -t ed25519 -f %USERPROFILE%\\.ssh\\id_ed25519_work -C "work@company.com"',note:"Git Bash or PowerShell. Creates two new files:\n  id_ed25519_work (private — never share)\n  id_ed25519_work.pub (public — upload to work GitHub)"}],
+          l:[{p:"$",c:'ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_work -C "work@company.com"',note:"Creates two new files:\n  id_ed25519_work (private — never share)\n  id_ed25519_work.pub (public — upload to work GitHub)"}]
+        },
+        {
+          lbl:"List your SSH key files to confirm",
+          w:[{p:"C:\\>",c:"dir %USERPROFILE%\\.ssh\\",note:"Should see: id_ed25519, id_ed25519.pub, id_ed25519_work, id_ed25519_work.pub"}],
+          l:[{p:"$",c:"ls -la ~/.ssh/",note:"Should see: id_ed25519, id_ed25519.pub, id_ed25519_work, id_ed25519_work.pub"}]
+        }
+      ]
+    },
+    {
+      t:"4.2 — Create the SSH config file",
+      badge:"sec",
+      desc:"The ~/.ssh/config file maps aliases to keys. Instead of connecting to 'github.com', your repos connect to 'github-personal' or 'github-work'. SSH reads this config and automatically picks the right key.",
+      pairs:[
+        {
+          lbl:"Open or create the config file",
+          w:[{p:"C:\\>",c:"notepad %USERPROFILE%\\.ssh\\config",note:"Opens Notepad. If the file doesn't exist, Notepad will create it. No file extension — just 'config'."}],
+          l:[{p:"$",c:"nano ~/.ssh/config",note:"Opens nano editor. If the file doesn't exist, nano will create it."}]
+        },
+        {
+          lbl:"Paste this exact content into the config file",
+          w:[{p:"",c:"# Personal GitHub account\nHost github-personal\n  HostName github.com\n  User git\n  IdentityFile ~/.ssh/id_ed25519\n  AddKeysToAgent yes\n\n# Work GitHub account\nHost github-work\n  HostName github.com\n  User git\n  IdentityFile ~/.ssh/id_ed25519_work\n  AddKeysToAgent yes",note:"Host is your alias. HostName is always github.com. Save and close."}],
+          l:[{p:"",c:"# Personal GitHub account\nHost github-personal\n  HostName github.com\n  User git\n  IdentityFile ~/.ssh/id_ed25519\n  AddKeysToAgent yes\n\n# Work GitHub account\nHost github-work\n  HostName github.com\n  User git\n  IdentityFile ~/.ssh/id_ed25519_work\n  AddKeysToAgent yes",note:"Host is your alias. HostName is always github.com. Save with Ctrl+O, exit with Ctrl+X."}]
+        },
+        {
+          lbl:"Set correct permissions on the config file",
+          w:[{p:"PS>",c:"icacls $env:USERPROFILE\\.ssh\\config /inheritance:r /grant:r \"$env:USERNAME:(R)\"",note:"Restricts the config file so only you can read it. Run in PowerShell."}],
+          l:[{p:"$",c:"chmod 600 ~/.ssh/config",note:"SSH will refuse to use a config file that is world-readable. This is mandatory."}]
+        }
+      ]
+    },
+    {
+      t:"4.3 — Test both connections and use the aliases",
+      desc:"Test each alias to confirm GitHub recognizes both keys. Then use the alias (github-personal or github-work) in place of 'github.com' in every SSH URL.",
+      pairs:[
+        {
+          lbl:"Test both SSH connections",
+          w:[
+            {p:"C:\\>",c:"ssh -T git@github-personal",note:"Expected: Hi personal-username! You've successfully authenticated."},
+            {p:"C:\\>",c:"ssh -T git@github-work",note:"Expected: Hi work-username! You've successfully authenticated."}
+          ],
+          l:[
+            {p:"$",c:"ssh -T git@github-personal",note:"Expected: Hi personal-username! You've successfully authenticated."},
+            {p:"$",c:"ssh -T git@github-work",note:"Expected: Hi work-username! You've successfully authenticated."}
+          ]
+        },
+        {
+          lbl:"Clone using an alias (instead of github.com)",
+          w:[
+            {p:"C:\\>",c:"git clone git@github-personal:username/personal-repo.git",note:"Uses your personal SSH key automatically."},
+            {p:"C:\\>",c:"git clone git@github-work:company/work-repo.git",note:"Uses your work SSH key automatically."}
+          ],
+          l:[
+            {p:"$",c:"git clone git@github-personal:username/personal-repo.git",note:"Uses your personal SSH key automatically."},
+            {p:"$",c:"git clone git@github-work:company/work-repo.git",note:"Uses your work SSH key automatically."}
+          ]
+        },
+        {
+          lbl:"Update an existing repo's remote to use alias",
+          w:[
+            {p:"C:\\my-project>",c:"git remote set-url origin git@github-personal:username/repo.git"},
+            {p:"C:\\my-project>",c:"git remote -v",note:"Verify URL shows the alias, not raw github.com."}
+          ],
+          l:[
+            {p:"$",c:"git remote set-url origin git@github-personal:username/repo.git"},
+            {p:"$",c:"git remote -v",note:"Verify URL shows the alias, not raw github.com."}
+          ]
+        },
+        {
+          lbl:"Set per-repo identity for work repos",
+          w:[
+            {p:"C:\\work-repo>",c:'git config user.email "work@company.com"',note:"No --global flag: sets identity only for this repo. Your work commits show your work email."},
+            {p:"C:\\work-repo>",c:'git config user.name "Your Name"'}
+          ],
+          l:[
+            {p:"$",c:'git config user.email "work@company.com"',note:"No --global flag: sets identity only for this repo. Your work commits show your work email."},
+            {p:"$",c:'git config user.name "Your Name"'}
+          ]
+        }
+      ],
+      tip:"The alias only replaces the 'github.com' part of the SSH URL. The rest (username/repo.git) stays exactly as GitHub shows it — just swap github.com for your alias."
+    }
+  ]
+},
+{
+  id:"p5",label:"Phase 5",title:"Phase 5 — Push, pull & remote workflows",
+  desc:"Connect your local repo to GitHub, send your code up with push, bring remote changes down with pull. This is the core daily loop of working with a remote repository.",
+  steps:[
+    {
+      t:"5.1 — Connect a local repo to GitHub",
+      desc:"A 'remote' is a named URL pointing to GitHub. The convention is to call your main remote 'origin'. You must do this once per repo before you can push or pull.",
+      pairs:[
+        {
+          lbl:"Create a repo on GitHub first",
+          w:[{p:"",c:"github.com → '+' → New repository\nName it (e.g. my-project)\nDo NOT add README if you have local commits\nClick 'Create repository'",note:"GitHub shows the SSH URL on the next screen: git@github.com:username/repo-name.git"}],
+          l:[{p:"",c:"github.com → '+' → New repository\nName it (e.g. my-project)\nDo NOT add README if you have local commits\nClick 'Create repository'",note:"GitHub shows the SSH URL on the next screen: git@github.com:username/repo-name.git"}]
+        },
+        {
+          lbl:"Add GitHub as remote 'origin'",
+          w:[
+            {p:"C:\\my-project>",c:"git remote add origin git@github-personal:username/my-project.git",note:"Using the SSH alias from Phase 4."},
+            {p:"C:\\my-project>",c:"git remote -v",note:"Shows origin (fetch) and origin (push) URLs. Confirm alias is correct."}
+          ],
+          l:[
+            {p:"$",c:"git remote add origin git@github-personal:username/my-project.git",note:"Using the SSH alias from Phase 4."},
+            {p:"$",c:"git remote -v",note:"Shows origin (fetch) and origin (push) URLs. Confirm alias is correct."}
+          ]
+        }
+      ]
+    },
+    {
+      t:"5.2 — Push code to GitHub",
+      desc:"git push uploads your local commits to GitHub. The first push of a branch needs the -u flag to link your local branch to the remote branch. After that, just 'git push' is enough.",
+      pairs:[
+        {
+          lbl:"First push — set upstream tracking",
+          w:[{p:"C:\\my-project>",c:"git push -u origin main",note:"-u sets the upstream tracking link.\nAfter this, 'git push' with no arguments is enough for this branch."}],
+          l:[{p:"$",c:"git push -u origin main",note:"-u sets the upstream tracking link.\nAfter this, 'git push' with no arguments is enough for this branch."}]
+        },
+        {
+          lbl:"All future pushes on this branch",
+          w:[{p:"C:\\my-project>",c:"git push",note:"No arguments needed — pushes to origin/main automatically."}],
+          l:[{p:"$",c:"git push",note:"No arguments needed — pushes to origin/main automatically."}]
+        },
+        {
+          lbl:"Push a feature branch for the first time",
+          w:[{p:"C:\\my-project>",c:"git push -u origin feature/login-page",note:"Same pattern. -u links this branch on first push only."}],
+          l:[{p:"$",c:"git push -u origin feature/login-page",note:"Same pattern. -u links this branch on first push only."}]
+        }
+      ],
+      tip:"If GitHub rejects your push with 'rejected — non-fast-forward', it means GitHub has commits your local doesn't. Run 'git pull' first, resolve any conflicts, then push again."
+    },
+    {
+      t:"5.3 — Pull changes from GitHub",
+      desc:"git pull downloads commits from GitHub and merges them into your current branch. Always pull before you start new work — especially in a team environment.",
+      pairs:[
+        {
+          lbl:"Standard pull (fetch + merge)",
+          w:[{p:"C:\\my-project>",c:"git pull origin main",note:"Downloads and merges remote commits into your current local branch."}],
+          l:[{p:"$",c:"git pull origin main",note:"Downloads and merges remote commits into your current local branch."}]
+        },
+        {
+          lbl:"Pull with rebase (cleaner history)",
+          w:[{p:"C:\\my-project>",c:"git pull --rebase origin main",note:"Replays your local commits on top of remote commits. Avoids a merge commit. Preferred for feature branches."}],
+          l:[{p:"$",c:"git pull --rebase origin main",note:"Replays your local commits on top of remote commits. Avoids a merge commit. Preferred for feature branches."}]
+        },
+        {
+          lbl:"Fetch first, inspect, then merge manually",
+          w:[
+            {p:"C:\\my-project>",c:"git fetch origin",note:"Downloads remote changes WITHOUT merging. Safe to run at any time."},
+            {p:"C:\\my-project>",c:"git log HEAD..origin/main --oneline",note:"See what commits came in before you decide to merge."},
+            {p:"C:\\my-project>",c:"git merge origin/main",note:"Apply fetched changes when you're ready."}
+          ],
+          l:[
+            {p:"$",c:"git fetch origin",note:"Downloads remote changes WITHOUT merging. Safe to run at any time."},
+            {p:"$",c:"git log HEAD..origin/main --oneline",note:"See what commits came in before you decide to merge."},
+            {p:"$",c:"git merge origin/main",note:"Apply fetched changes when you're ready."}
+          ]
+        }
+      ]
+    },
+    {
+      t:"5.4 — Clone an existing GitHub repository",
+      desc:"Use this when the project already exists on GitHub. Cloning downloads the full history and sets up the remote automatically.",
+      pairs:[
+        {
+          lbl:"Clone via SSH (recommended — uses your key)",
+          w:[
+            {p:"C:\\>",c:"git clone git@github-personal:username/repo-name.git",note:"Downloads to a folder named repo-name. Remote 'origin' is set up automatically."},
+            {p:"C:\\>",c:"cd repo-name"}
+          ],
+          l:[
+            {p:"$",c:"git clone git@github-personal:username/repo-name.git",note:"Downloads to a folder named repo-name. Remote 'origin' is set up automatically."},
+            {p:"$",c:"cd repo-name"}
+          ]
+        },
+        {
+          lbl:"Clone via HTTPS (fallback, requires token)",
+          w:[{p:"C:\\>",c:"git clone https://github.com/username/repo-name.git"}],
+          l:[{p:"$",c:"git clone https://github.com/username/repo-name.git"}]
+        }
+      ]
+    }
+  ]
+},
+{
+  id:"p6",label:"Phase 6",title:"Phase 6 — Branching and merging",
+  desc:"Branches let you work on features, fixes, and experiments without touching the stable main branch. This is the professional workflow — every piece of work gets its own branch.",
+  steps:[
+    {
+      t:"6.1 — Create and switch branches",
+      desc:"A branch is a lightweight moveable pointer to a commit. Creating one is instant. The golden rule: never commit directly to main — always branch first.",
+      pairs:[
+        {
+          lbl:"Create and switch in one command",
+          w:[{p:"C:\\my-project>",c:"git checkout -b feature/user-login",note:"Creates the branch and switches to it immediately. Name it descriptively: feature/, fix/, docs/, chore/."}],
+          l:[{p:"$",c:"git checkout -b feature/user-login",note:"Creates the branch and switches to it immediately. Name it descriptively: feature/, fix/, docs/, chore/."}]
+        },
+        {
+          lbl:"Modern alternative (Git 2.23+)",
+          w:[{p:"C:\\my-project>",c:"git switch -c feature/user-login",note:"git switch is cleaner and more explicit. Does exactly the same thing."}],
+          l:[{p:"$",c:"git switch -c feature/user-login",note:"git switch is cleaner and more explicit. Does exactly the same thing."}]
+        },
+        {
+          lbl:"List all branches",
+          w:[
+            {p:"C:\\my-project>",c:"git branch",note:"Lists local branches. * marks your current branch."},
+            {p:"C:\\my-project>",c:"git branch -a",note:"Lists all branches including remote ones (shown as remotes/origin/...)."}
+          ],
+          l:[
+            {p:"$",c:"git branch",note:"Lists local branches. * marks your current branch."},
+            {p:"$",c:"git branch -a",note:"Lists all branches including remote ones (shown as remotes/origin/...)."}
+          ]
+        },
+        {
+          lbl:"Switch to an existing branch",
+          w:[{p:"C:\\my-project>",c:"git checkout main",note:"Or: git switch main — both work."}],
+          l:[{p:"$",c:"git checkout main",note:"Or: git switch main — both work."}]
+        }
+      ]
+    },
+    {
+      t:"6.2 — The complete feature branch workflow",
+      desc:"This is the sequence you follow every single day for every piece of work. Repeat this loop for every feature, bug fix, or change.",
+      pairs:[
+        {
+          lbl:"Full workflow: start to merge",
+          w:[
+            {p:"C:\\>",c:"git checkout main",note:"Step 1: Always start from main."},
+            {p:"C:\\>",c:"git pull origin main",note:"Step 2: Get latest changes before branching."},
+            {p:"C:\\>",c:"git checkout -b feature/my-feature",note:"Step 3: Create your branch."},
+            {p:"C:\\>",c:"REM  ... edit your files ...",note:"Step 4: Do your work."},
+            {p:"C:\\>",c:"git status",note:"Step 5: See what changed."},
+            {p:"C:\\>",c:"git add .",note:"Step 6: Stage all changes."},
+            {p:"C:\\>",c:'git commit -m "feat: add email validation"',note:"Step 7: Commit with clear message."},
+            {p:"C:\\>",c:"git push -u origin feature/my-feature",note:"Step 8: Push branch to GitHub."}
+          ],
+          l:[
+            {p:"$",c:"git checkout main",note:"Step 1: Always start from main."},
+            {p:"$",c:"git pull origin main",note:"Step 2: Get latest changes before branching."},
+            {p:"$",c:"git checkout -b feature/my-feature",note:"Step 3: Create your branch."},
+            {p:"$",c:"# ... edit your files ...",note:"Step 4: Do your work."},
+            {p:"$",c:"git status",note:"Step 5: See what changed."},
+            {p:"$",c:"git add .",note:"Step 6: Stage all changes."},
+            {p:"$",c:'git commit -m "feat: add email validation"',note:"Step 7: Commit with clear message."},
+            {p:"$",c:"git push -u origin feature/my-feature",note:"Step 8: Push branch to GitHub."}
+          ]
+        }
+      ],
+      tip:"On GitHub, after pushing your branch, go to the repo and click the yellow banner 'Compare & pull request'. This opens a PR for team review before merging into main."
+    },
+    {
+      t:"6.3 — Merging and resolving conflicts",
+      desc:"Merging combines changes from one branch into another. When two branches changed the same lines of a file differently, a conflict occurs — Git marks the conflict in the file and waits for you to resolve it.",
+      pairs:[
+        {
+          lbl:"Merge a branch into main locally",
+          w:[
+            {p:"C:\\>",c:"git checkout main",note:"Switch to the branch you're merging INTO."},
+            {p:"C:\\>",c:"git merge feature/my-feature",note:"Merges the feature branch into main."},
+            {p:"C:\\>",c:"git push origin main",note:"Push the merged result to GitHub."},
+            {p:"C:\\>",c:"git branch -d feature/my-feature",note:"Delete the local branch — it's merged, you don't need it anymore."},
+            {p:"C:\\>",c:"git push origin --delete feature/my-feature",note:"Delete the remote branch on GitHub."}
+          ],
+          l:[
+            {p:"$",c:"git checkout main",note:"Switch to the branch you're merging INTO."},
+            {p:"$",c:"git merge feature/my-feature",note:"Merges the feature branch into main."},
+            {p:"$",c:"git push origin main",note:"Push the merged result to GitHub."},
+            {p:"$",c:"git branch -d feature/my-feature",note:"Delete the local branch — it's merged, you don't need it anymore."},
+            {p:"$",c:"git push origin --delete feature/my-feature",note:"Delete the remote branch on GitHub."}
+          ]
+        },
+        {
+          lbl:"Resolve a merge conflict",
+          w:[
+            {p:"",c:"<<<<<<< HEAD\nyour version of the line\n=======\ntheir version of the line\n>>>>>>> feature/their-branch",note:"Git marks conflicts like this. Open the file, delete the markers, keep the correct version."},
+            {p:"C:\\>",c:"git add conflicted-file.txt",note:"After fixing, stage the resolved file."},
+            {p:"C:\\>",c:'git commit -m "resolve: fix merge conflict in login form"',note:"Commit the resolution."}
+          ],
+          l:[
+            {p:"",c:"<<<<<<< HEAD\nyour version of the line\n=======\ntheir version of the line\n>>>>>>> feature/their-branch",note:"Git marks conflicts like this. Open the file, delete the markers, keep the correct version."},
+            {p:"$",c:"git add conflicted-file.txt",note:"After fixing, stage the resolved file."},
+            {p:"$",c:'git commit -m "resolve: fix merge conflict in login form"',note:"Commit the resolution."}
+          ]
+        }
+      ]
+    }
+  ]
+},
+{
+  id:"p7",label:"Phase 7",title:"Phase 7 — Advanced Git & security",
+  desc:"Undo mistakes safely, protect your repo from leaked secrets, keep history clean, and sign commits with GPG to prove authorship. These are powerful commands — read every note before running them.",
+  steps:[
+    {
+      t:"7.1 — Undoing changes safely",
+      badge:"adv",
+      desc:"Git always has a way to undo. The right method depends on whether you've committed, whether you've pushed, and whether others have the commits. Soft and mixed resets are safe. Hard resets are destructive.",
+      pairs:[
+        {
+          lbl:"Discard unstaged changes in a file",
+          w:[{p:"C:\\>",c:"git restore filename.txt",note:"Throws away all uncommitted changes to this file. Cannot be undone."}],
+          l:[{p:"$",c:"git restore filename.txt",note:"Throws away all uncommitted changes to this file. Cannot be undone."}]
+        },
+        {
+          lbl:"Unstage a file (before committing)",
+          w:[{p:"C:\\>",c:"git restore --staged filename.txt",note:"Moves file back to Working Directory. Changes are preserved."}],
+          l:[{p:"$",c:"git restore --staged filename.txt",note:"Moves file back to Working Directory. Changes are preserved."}]
+        },
+        {
+          lbl:"Undo last commit — keep changes staged (--soft)",
+          w:[{p:"C:\\>",c:"git reset --soft HEAD~1",note:"Removes the commit from history but keeps all changes staged. Nothing lost."}],
+          l:[{p:"$",c:"git reset --soft HEAD~1",note:"Removes the commit from history but keeps all changes staged. Nothing lost."}]
+        },
+        {
+          lbl:"Undo last commit — keep changes unstaged (--mixed, default)",
+          w:[{p:"C:\\>",c:"git reset HEAD~1",note:"Removes commit and unstages changes. Files are still modified in Working Directory."}],
+          l:[{p:"$",c:"git reset HEAD~1",note:"Removes commit and unstages changes. Files are still modified in Working Directory."}]
+        },
+        {
+          lbl:"Revert a commit — SAFE for pushed/shared branches",
+          w:[
+            {p:"C:\\>",c:"git revert abc1234",note:"Creates a NEW commit that undoes a previous one. Does not rewrite history. Always use this on main or any shared branch."},
+            {p:"C:\\>",c:"git push"}
+          ],
+          l:[
+            {p:"$",c:"git revert abc1234",note:"Creates a NEW commit that undoes a previous one. Does not rewrite history. Always use this on main or any shared branch."},
+            {p:"$",c:"git push"}
+          ]
+        }
+      ],
+      warn:"Never use 'git reset --hard' on commits that others have already pulled. Use 'git revert' instead — it undoes without rewriting shared history."
+    },
+    {
+      t:"7.2 — Stashing work in progress",
+      badge:"adv",
+      desc:"Stash saves your uncommitted changes temporarily so you can switch branches without committing half-finished work. Essential when an urgent bug fix interrupts your current task.",
+      pairs:[
+        {
+          lbl:"Save, list, restore, and drop stashes",
+          w:[
+            {p:"C:\\>",c:"git stash",note:"Saves all modified tracked files. Working directory reverts to last commit."},
+            {p:"C:\\>",c:"git stash list",note:"Shows all stashed states: stash@{0} is the most recent."},
+            {p:"C:\\>",c:"git stash pop",note:"Restores the most recent stash and removes it from the list."},
+            {p:"C:\\>",c:"git stash apply stash@{1}",note:"Apply a specific stash without removing it."},
+            {p:"C:\\>",c:'git stash push -m "half-done login validation"',note:"Stash with a descriptive label — easier to identify later."}
+          ],
+          l:[
+            {p:"$",c:"git stash",note:"Saves all modified tracked files. Working directory reverts to last commit."},
+            {p:"$",c:"git stash list",note:"Shows all stashed states: stash@{0} is the most recent."},
+            {p:"$",c:"git stash pop",note:"Restores the most recent stash and removes it from the list."},
+            {p:"$",c:"git stash apply stash@{1}",note:"Apply a specific stash without removing it."},
+            {p:"$",c:'git stash push -m "half-done login validation"',note:"Stash with a descriptive label — easier to identify later."}
+          ]
+        }
+      ]
+    },
+    {
+      t:"7.3 — Preventing secrets from entering the repo",
+      badge:"sec",
+      desc:"The most common Git security mistake is committing API keys, passwords, or tokens. Prevention with .gitignore is trivial. Cleanup after a public push is painful and the secret must be considered fully compromised the instant it touches GitHub.",
+      pairs:[
+        {
+          lbl:"Create a .gitignore file",
+          w:[
+            {p:"C:\\my-project>",c:"notepad .gitignore",note:"Creates and opens .gitignore in Notepad. Add one pattern per line:"},
+            {p:"",c:".env\n.env.local\n*.pem\n*.key\nsecrets.json\nnode_modules\\\n__pycache__\\\n.DS_Store\nThumbs.db",note:"Git will never stage or commit files matching these patterns."},
+            {p:"C:\\my-project>",c:"git add .gitignore",note:""},
+            {p:"C:\\my-project>",c:'git commit -m "chore: add gitignore"',note:"Add it before any other files in a new repo."}
+          ],
+          l:[
+            {p:"$",c:"nano .gitignore",note:"Creates and opens .gitignore in nano. Add one pattern per line:"},
+            {p:"",c:".env\n.env.local\n*.pem\n*.key\nsecrets.json\nnode_modules/\n__pycache__/\n.DS_Store",note:"Git will never stage or commit files matching these patterns."},
+            {p:"$",c:"git add .gitignore",note:""},
+            {p:"$",c:'git commit -m "chore: add gitignore"',note:"Add it before any other files in a new repo."}
+          ]
+        },
+        {
+          lbl:"If you already committed a secret — act immediately",
+          w:[
+            {p:"",c:"STEP 1: REVOKE the secret first — invalidate it\nin the service that issued it. Do this BEFORE\nanything else. It is already compromised.",note:""},
+            {p:"C:\\>",c:"git rm --cached .env",note:"Untracks the file without deleting it from disk."},
+            {p:"C:\\>",c:'git commit -m "security: remove tracked .env"'},
+            {p:"C:\\>",c:"git push"}
+          ],
+          l:[
+            {p:"",c:"STEP 1: REVOKE the secret first — invalidate it\nin the service that issued it. Do this BEFORE\nanything else. It is already compromised.",note:""},
+            {p:"$",c:"git rm --cached .env",note:"Untracks the file without deleting it from disk."},
+            {p:"$",c:'git commit -m "security: remove tracked .env"'},
+            {p:"$",c:"git push"}
+          ]
+        }
+      ],
+      warn:"Removing a secret from the latest commit does NOT remove it from Git history. Old commits still contain it. For full history purge, use git-filter-repo and force-push. Treat the secret as compromised and rotate it regardless."
+    },
+    {
+      t:"7.4 — Interactive rebase: clean up history",
+      badge:"adv",
+      desc:"Interactive rebase lets you rewrite, squash, reorder, or edit commits before merging. Use it to turn messy 'WIP', 'fix typo', 'oops' commits into a clean, logical story.",
+      pairs:[
+        {
+          lbl:"Squash last N commits into one",
+          w:[{p:"C:\\>",c:"git rebase -i HEAD~4",note:"Opens your editor with the last 4 commits listed.\nChange 'pick' to 's' (squash) for commits to fold into the one above.\nSave and close. Git prompts for a combined message."}],
+          l:[{p:"$",c:"git rebase -i HEAD~4",note:"Opens your editor with the last 4 commits listed.\nChange 'pick' to 's' (squash) for commits to fold into the one above.\nSave and close. Git prompts for a combined message."}]
+        },
+        {
+          lbl:"Rebase feature branch onto latest main",
+          w:[
+            {p:"C:\\>",c:"git checkout feature/my-feature"},
+            {p:"C:\\>",c:"git rebase main",note:"Moves your commits to the tip of main. Resolve any conflicts, then:"},
+            {p:"C:\\>",c:"git add resolved-file.txt"},
+            {p:"C:\\>",c:"git rebase --continue"},
+            {p:"C:\\>",c:"git push --force-with-lease",note:"Required after rebase. --force-with-lease is safer than --force: aborts if someone else pushed."}
+          ],
+          l:[
+            {p:"$",c:"git checkout feature/my-feature"},
+            {p:"$",c:"git rebase main",note:"Moves your commits to the tip of main. Resolve any conflicts, then:"},
+            {p:"$",c:"git add resolved-file.txt"},
+            {p:"$",c:"git rebase --continue"},
+            {p:"$",c:"git push --force-with-lease",note:"Required after rebase. --force-with-lease is safer than --force: aborts if someone else pushed."}
+          ]
+        }
+      ],
+      warn:"Never rebase commits that are on a shared branch others are actively using. Rebase rewrites commit hashes — this breaks every other person's local copy of that branch."
+    },
+    {
+      t:"7.5 — GPG-signed commits: verified authorship",
+      badge:"sec",
+      desc:"GPG-signed commits show a green 'Verified' badge on GitHub, proving the commit came from you and was not tampered with. Required for security-sensitive and open source projects.",
+      pairs:[
+        {
+          lbl:"Generate a GPG key",
+          w:[{p:"PS>",c:"gpg --full-generate-key",note:"Install Gpg4win first (gpg4win.org).\nChoose: RSA and RSA → 4096 bits → no expiry → use same email as GitHub."}],
+          l:[{p:"$",c:"gpg --full-generate-key",note:"gpg is pre-installed on most distros.\nChoose: RSA and RSA → 4096 bits → no expiry → use same email as GitHub."}]
+        },
+        {
+          lbl:"Configure Git to use your GPG key",
+          w:[
+            {p:"PS>",c:"gpg --list-secret-keys --keyid-format=long",note:"Note the long hex string after 'sec rsa4096/' — that is your key ID."},
+            {p:"PS>",c:"git config --global user.signingkey YOUR_KEY_ID"},
+            {p:"PS>",c:"git config --global commit.gpgsign true",note:"Auto-signs every commit from now on."},
+            {p:"PS>",c:'git config --global gpg.program "C:\\Program Files (x86)\\GnuPG\\bin\\gpg.exe"',note:"Tells Git where gpg is installed on Windows."}
+          ],
+          l:[
+            {p:"$",c:"gpg --list-secret-keys --keyid-format=long",note:"Note the long hex string after 'sec rsa4096/' — that is your key ID."},
+            {p:"$",c:"git config --global user.signingkey YOUR_KEY_ID"},
+            {p:"$",c:"git config --global commit.gpgsign true",note:"Auto-signs every commit from now on."},
+            {p:"$",c:"git config --global gpg.program gpg2",note:"On some Linux distros, gpg2 is the correct binary name."}
+          ]
+        },
+        {
+          lbl:"Export public key and upload to GitHub",
+          w:[
+            {p:"PS>",c:"gpg --armor --export YOUR_KEY_ID",note:"Copy the entire output including '-----BEGIN PGP PUBLIC KEY BLOCK-----'."},
+            {p:"",c:"GitHub → Settings → SSH and GPG keys\n→ New GPG key → paste → Save",note:"Commits now show 'Verified' badge on GitHub."}
+          ],
+          l:[
+            {p:"$",c:"gpg --armor --export YOUR_KEY_ID",note:"Copy the entire output including '-----BEGIN PGP PUBLIC KEY BLOCK-----'."},
+            {p:"",c:"GitHub → Settings → SSH and GPG keys\n→ New GPG key → paste → Save",note:"Commits now show 'Verified' badge on GitHub."}
+          ]
+        }
+      ],
+      tip:"After configuring GPG, run a test commit: git commit --allow-empty -m 'test: verify GPG signing'. Then check GitHub — it should show a Verified badge next to that commit."
+    }
+  ]
+},
+{
+  id:"p8",label:"⚡ Cheat-sheet",title:"Daily cheat-sheet — the commands you actually use",
+  desc:"Roughly 90% of the Git you'll touch on any given day. Bookmark this phase for quick revision — everything here is explained in full in the earlier phases; this is just the fast lookup. Commands are the same on Windows and Linux (only the prompt differs).",
+  steps:[
+    {
+      t:"The daily loop",
+      desc:"This handful covers almost every working day: see what changed, stage it, commit it, and sync with GitHub.",
+      pairs:[
+        {
+          lbl:"Save & sync your work",
+          w:[
+            {p:"C:\\>",c:"git status",note:"What changed? Run this constantly."},
+            {p:"C:\\>",c:"git add .",note:"Stage everything (or: git add file.txt for just one file)."},
+            {p:"C:\\>",c:'git commit -m "clear message"',note:"Save a snapshot locally."},
+            {p:"C:\\>",c:"git push",note:"Send your commits up to GitHub."},
+            {p:"C:\\>",c:"git pull",note:"Get the latest from GitHub — do this before you start work."}
+          ],
+          l:[
+            {p:"$",c:"git status",note:"What changed? Run this constantly."},
+            {p:"$",c:"git add .",note:"Stage everything (or: git add file.txt for just one file)."},
+            {p:"$",c:'git commit -m "clear message"',note:"Save a snapshot locally."},
+            {p:"$",c:"git push",note:"Send your commits up to GitHub."},
+            {p:"$",c:"git pull",note:"Get the latest from GitHub — do this before you start work."}
+          ]
+        }
+      ],
+      tip:"Golden order every session: git pull → do your work → git add . → git commit → git push."
+    },
+    {
+      t:"Branches — quick reference",
+      desc:"Never work directly on main. Branch, work, merge, delete.",
+      pairs:[
+        {
+          lbl:"Create, switch, merge, delete",
+          w:[
+            {p:"C:\\>",c:"git checkout -b feature/x",note:"New branch + switch to it (modern: git switch -c feature/x)."},
+            {p:"C:\\>",c:"git checkout main",note:"Switch back to main (modern: git switch main)."},
+            {p:"C:\\>",c:"git branch",note:"List branches. * marks the one you're on."},
+            {p:"C:\\>",c:"git merge feature/x",note:"Merge a branch into the branch you're currently on."},
+            {p:"C:\\>",c:"git branch -d feature/x",note:"Delete a branch after it's merged."}
+          ],
+          l:[
+            {p:"$",c:"git checkout -b feature/x",note:"New branch + switch to it (modern: git switch -c feature/x)."},
+            {p:"$",c:"git checkout main",note:"Switch back to main (modern: git switch main)."},
+            {p:"$",c:"git branch",note:"List branches. * marks the one you're on."},
+            {p:"$",c:"git merge feature/x",note:"Merge a branch into the branch you're currently on."},
+            {p:"$",c:"git branch -d feature/x",note:"Delete a branch after it's merged."}
+          ]
+        }
+      ]
+    },
+    {
+      t:"Look & undo — quick reference",
+      desc:"Inspect history and back out of mistakes safely.",
+      pairs:[
+        {
+          lbl:"Inspect & undo",
+          w:[
+            {p:"C:\\>",c:"git log --oneline",note:"Compact history, one commit per line."},
+            {p:"C:\\>",c:"git diff",note:"See your unstaged changes."},
+            {p:"C:\\>",c:"git restore file.txt",note:"Discard uncommitted changes to a file."},
+            {p:"C:\\>",c:"git reset HEAD~1",note:"Undo the last commit but keep the changes."},
+            {p:"C:\\>",c:"git stash",note:"Shelve work temporarily; git stash pop brings it back."}
+          ],
+          l:[
+            {p:"$",c:"git log --oneline",note:"Compact history, one commit per line."},
+            {p:"$",c:"git diff",note:"See your unstaged changes."},
+            {p:"$",c:"git restore file.txt",note:"Discard uncommitted changes to a file."},
+            {p:"$",c:"git reset HEAD~1",note:"Undo the last commit but keep the changes."},
+            {p:"$",c:"git stash",note:"Shelve work temporarily; git stash pop brings it back."}
+          ]
+        }
+      ],
+      warn:"On a shared branch, undo a pushed commit with git revert (safe) — never git reset --hard, which rewrites history others already have."
+    }
+  ]
+}
+];
+
+// ===== state + persistence =====
+let cur=0;
+const open={};
+let done={};
+let loaded=false;
+try{
+  const s=JSON.parse(localStorage.getItem('git-guide-v1')||'null');
+  if(s){cur=s.cur||0;Object.assign(open,s.open||{});done=s.done||{};loaded=true;}
+}catch(e){}
+// First visit: she's studied through SSH (Phase 3). Pre-mark 0–3 done, land on Phase 4.
+if(!loaded){done={0:true,1:true,2:true,3:true};cur=4;}
+function save(){try{localStorage.setItem('git-guide-v1',JSON.stringify({cur,open,done}))}catch(e){}}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function renderPair(pair,pi,si,pii){
+  const id=`${pi}-${si}-${pii}`;
+  const winCmds=pair.w.map(c=>{
+    if(!c.c)return'';
+    return`<div class="cmd-row"><span class="prompt wp">${esc(c.p||'')}</span><span class="cmd">${esc(c.c)}</span></div>${c.note?`<div class="cmd-note">${esc(c.note)}</div>`:''}`
+  }).join('');
+  const linCmds=pair.l.map(c=>{
+    if(!c.c)return'';
+    return`<div class="cmd-row"><span class="prompt lp">${esc(c.p||'')}</span><span class="cmd">${esc(c.c)}</span></div>${c.note?`<div class="cmd-note">${esc(c.note)}</div>`:''}`
+  }).join('');
+  return`<div style="margin-bottom:6px">
+    ${pair.lbl?`<div class="section-lbl">${esc(pair.lbl)}</div>`:''}
+    <div class="dual">
+      <div class="os-block">
+        <div class="os-hdr win-hdr">🪟&nbsp;Windows CMD / PowerShell<button class="cpbtn" onclick="cp(this,'w-${id}')">📋 Copy</button></div>
+        <div class="os-cmds" id="w-${id}">${winCmds}</div>
+      </div>
+      <div class="os-block">
+        <div class="os-hdr lin-hdr">🐧&nbsp;Linux Terminal<button class="cpbtn" onclick="cp(this,'l-${id}')">📋 Copy</button></div>
+        <div class="os-cmds" id="l-${id}">${linCmds}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderStep(step,pi,si){
+  const key=`${pi}-${si}`;
+  const isOpen=open[key];
+  const badge=step.badge==='sec'?`<span class="sbadge sec-badge">🛡 Security</span>`:step.badge==='adv'?`<span class="sbadge adv-badge">✨ Advanced</span>`:'';
+  return`<div class="step${isOpen?' open':''}" id="step-${key}">
+    <div class="step-hdr" onclick="tog('${key}')">
+      <div class="sn">${si+1}</div>
+      <div class="st">${esc(step.t)}</div>
+      ${badge}
+      <span class="chev">▾</span>
+    </div>
+    <div class="step-body">
+      <div class="step-desc">${esc(step.desc)}</div>
+      ${(step.pairs||[]).map((p,pii)=>renderPair(p,pi,si,pii)).join('')}
+      ${step.tip?`<div class="tip"><strong>Tip:</strong> ${esc(step.tip)}</div>`:''}
+      ${step.warn?`<div class="warn"><strong>Warning:</strong> ${esc(step.warn)}</div>`:''}
+      ${step.danger?`<div class="danger"><strong>Danger:</strong> ${esc(step.danger)}</div>`:''}
+    </div>
+  </div>`;
+}
+
+function doneCount(){return D.reduce((n,_,i)=>n+(done[i]?1:0),0)}
+
+function render(){
+  const ph=D[cur];
+  document.getElementById('nav').innerHTML=D.map((p,i)=>`<button class="pn${i===cur?' active':done[i]?' done':''}" onclick="goTo(${i})">${done[i]&&i!==cur?'✓ ':''}${esc(p.label)}</button>`).join('');
+  const dc=doneCount();
+  document.getElementById('pfill').style.width=((dc/D.length)*100)+'%';
+  document.getElementById('pcount').textContent=`${dc} of ${D.length} phases complete`;
+  document.getElementById('fc').textContent=`Phase ${cur+1} of ${D.length}`;
+  document.getElementById('bp').disabled=cur===0;
+  document.getElementById('bn').disabled=cur===D.length-1;
+  document.getElementById('content').innerHTML=`
+    <div class="phase-title">${esc(ph.title)}</div>
+    <div class="phase-desc">${esc(ph.desc)}</div>
+    ${ph.steps.map((s,si)=>renderStep(s,cur,si)).join('')}
+    <div class="complete-wrap">
+      <button class="ccb${done[cur]?' on':''}" onclick="toggleDone()">${done[cur]?'✓ Phase complete — click to unmark':'Mark this phase complete'}</button>
+    </div>
+  `;
+  save();
+}
+
+function goTo(i){cur=i;render();window.scrollTo(0,0)}
+function go(d){goTo(Math.max(0,Math.min(D.length-1,cur+d)))}
+function tog(key){open[key]=!open[key];render()}
+function toggleDone(){done[cur]=!done[cur];render()}
+function resetProgress(){if(confirm('Clear all saved progress and start from the beginning?')){done={};for(const k in open)delete open[k];cur=0;render();window.scrollTo(0,0)}}
+function cp(btn,id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const lines=[...el.querySelectorAll('.cmd')].map(e=>e.textContent.trim())
+    .filter(t=>t&&!t.startsWith('STEP')&&!t.startsWith('github.com')&&!/^\d\./.test(t)&&!t.startsWith('<<<')&&!t.startsWith('REM')&&!t.startsWith('#'));
+  navigator.clipboard.writeText(lines.join('\n')).then(()=>{const o=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>{btn.textContent=o},1400)});
+}
+render();
+</script>
+</body>
+</html>
